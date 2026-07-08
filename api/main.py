@@ -45,14 +45,12 @@ def search_number(phone_number: str):
         raise HTTPException(status_code=500, detail=f"Database Error: {str(e)}")
 
 # 3. አዲስ ቁጥር መመዝገቢያ እና ስፓም ሪፖርት ማድረጊያ (POST Route)
-@app.get("/search/{phone_number}") # (ከላይ የተጻፈው እንዳለ ሆኖ)
 @app.post("/register")
 def register_number(payload: NumberRegistration):
     # ቁጥሩን ማጽዳት
     clean_number = payload.phone_number.replace(" ", "")
     if clean_number.startswith("0"):
         clean_number = "+251" + clean_number[1:]
-        
     try:
         # መጀመሪያ ቁጥሩ በዳታቤዙ ውስጥ መኖሩን ቼክ ማድረግ
         existing = supabase.table("phone_directory").select("id, is_spam").eq("phone_number", clean_number).execute()
